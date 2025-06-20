@@ -31,9 +31,9 @@ type TeamAPIResponse struct {
 }
 
 type IssuesAPIResponse struct {
-	Data       []Issue `json:"data"`
-	Pagination Pagination     `json:"pagination"`
-	RequestID  string         `json:"request_id"`
+	Data       []Issue    `json:"data"`
+	Pagination Pagination `json:"pagination"`
+	RequestID  string     `json:"request_id"`
 }
 
 type User struct {
@@ -53,35 +53,35 @@ type Team struct {
 }
 
 type Issue struct {
-	Account                           AccountInfo             `json:"account"`
-	Assignee                          Person                  `json:"assignee"`
-	BodyHTML                          string                  `json:"body_html"`
-	BusinessHoursFirstResponseSeconds int                     `json:"business_hours_first_response_seconds"`
-	BusinessHoursResolutionSeconds    int                     `json:"business_hours_resolution_seconds"`
-	ChatWidgetInfo                    ChatWidgetInfo          `json:"chat_widget_info"`
-	CreatedAt                         string                  `json:"created_at"`
-	CSATResponses                     []CSATResponse          `json:"csat_responses"`
-	CustomFields                      map[string]CustomField  `json:"custom_fields"`
-	CustomerPortalVisible             bool                    `json:"customer_portal_visible"`
-	ExternalIssues                    []ExternalIssue         `json:"external_issues"`
-	FirstResponseSeconds              int                     `json:"first_response_seconds"`
-	FirstResponseTime                 string                  `json:"first_response_time"`
-	ID                                string                  `json:"id"`
-	LatestMessageTime                 string                  `json:"latest_message_time"`
-	Link                              string                  `json:"link"`
-	Number                            int                     `json:"number"`
-	NumberOfTouches                   int                     `json:"number_of_touches"`
-	Requester                         Person                  `json:"requester"`
-	ResolutionSeconds                 int                     `json:"resolution_seconds"`
-	ResolutionTime                    string                  `json:"resolution_time"`
-	Slack                             SlackInfo               `json:"slack"`
-	SnoozedUntilTime                  string                  `json:"snoozed_until_time"`
-	Source                            string                  `json:"source"`
-	State                             string                  `json:"state"`
-	Tags                              []string                `json:"tags"`
-	Team                              TeamInfo                `json:"team"`
-	Title                             string                  `json:"title"`
-	Type                              string                  `json:"type"`
+	Account                           AccountInfo            `json:"account"`
+	Assignee                          Person                 `json:"assignee"`
+	BodyHTML                          string                 `json:"body_html"`
+	BusinessHoursFirstResponseSeconds int                    `json:"business_hours_first_response_seconds"`
+	BusinessHoursResolutionSeconds    int                    `json:"business_hours_resolution_seconds"`
+	ChatWidgetInfo                    ChatWidgetInfo         `json:"chat_widget_info"`
+	CreatedAt                         string                 `json:"created_at"`
+	CSATResponses                     []CSATResponse         `json:"csat_responses"`
+	CustomFields                      map[string]CustomField `json:"custom_fields"`
+	CustomerPortalVisible             bool                   `json:"customer_portal_visible"`
+	ExternalIssues                    []ExternalIssue        `json:"external_issues"`
+	FirstResponseSeconds              int                    `json:"first_response_seconds"`
+	FirstResponseTime                 string                 `json:"first_response_time"`
+	ID                                string                 `json:"id"`
+	LatestMessageTime                 string                 `json:"latest_message_time"`
+	Link                              string                 `json:"link"`
+	Number                            int                    `json:"number"`
+	NumberOfTouches                   int                    `json:"number_of_touches"`
+	Requester                         Person                 `json:"requester"`
+	ResolutionSeconds                 int                    `json:"resolution_seconds"`
+	ResolutionTime                    string                 `json:"resolution_time"`
+	Slack                             SlackInfo              `json:"slack"`
+	SnoozedUntilTime                  string                 `json:"snoozed_until_time"`
+	Source                            string                 `json:"source"`
+	State                             string                 `json:"state"`
+	Tags                              []string               `json:"tags"`
+	Team                              TeamInfo               `json:"team"`
+	Title                             string                 `json:"title"`
+	Type                              string                 `json:"type"`
 }
 
 type AccountInfo struct {
@@ -134,10 +134,11 @@ type SimplifiedTeam struct {
 }
 
 type SimplifiedIssue struct {
-	Account string `json:"account"`
+	ID             int    `json:"id"`
+	Account        string `json:"account"`
 	LastUpdateTime string `json:"last_update_time"`
-	Priority string `json:"priority"`
-	VIP bool   `json:"vip"`
+	Priority       string `json:"priority"`
+	VIP            bool   `json:"vip"`
 }
 
 type Pagination struct {
@@ -274,8 +275,8 @@ func getIssuesWaitingOnUser(c echo.Context) error {
 	reqAuthorizationHeader := c.Request().Header.Get("Authorization")
 
 	code, body, err := clientDoer(RequestConfig{
-		URL:           url,
-		QueryParams:   map[string]string{
+		URL: url,
+		QueryParams: map[string]string{
 			"start_time": time.Now().AddDate(0, 0, -30).Format(time.RFC3339),
 			"end_time":   time.Now().Format(time.RFC3339),
 		},
@@ -284,7 +285,7 @@ func getIssuesWaitingOnUser(c echo.Context) error {
 	if err != nil {
 		return c.String(code, err.Error())
 	}
-	
+
 	var response IssuesAPIResponse
 	if err := json.Unmarshal([]byte(body), &response); err != nil {
 		fmt.Println("Error unmarshalling JSON:", err)
@@ -295,13 +296,14 @@ func getIssuesWaitingOnUser(c echo.Context) error {
 
 	issues := make([]SimplifiedIssue, 0, len(response.Data))
 	for _, issue := range response.Data {
-		if issue.Assignee.ID == filters["user_id"] || issue.Team.ID == filters["team_id"] {
+		if issue.Assignee.ID == filters["user_id"] && issue.Team.ID == filters["team_id"] {
 			if issue.State == "waiting_on_you" {
 				issues = append(issues, SimplifiedIssue{
-					Account:         issue.Account.ID,
-					LastUpdateTime:  issue.LatestMessageTime,
-					Priority:        issue.CustomFields["priority"].Value,
-					VIP:             true,
+					ID:             issue.Number,
+					Account:        issue.Account.ID,
+					LastUpdateTime: issue.LatestMessageTime,
+					Priority:       issue.CustomFields["priority"].Value,
+					VIP:            true,
 				})
 			}
 		}
