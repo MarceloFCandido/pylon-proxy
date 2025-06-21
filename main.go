@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 	"slices"
 	"time"
 
@@ -34,6 +35,11 @@ type IssuesAPIResponse struct {
 	Data       []Issue    `json:"data"`
 	Pagination Pagination `json:"pagination"`
 	RequestID  string     `json:"request_id"`
+}
+
+type AccountAPIResponse struct {
+	Data      Account `json:"data"`
+	RequestID string  `json:"request_id"`
 }
 
 type User struct {
@@ -82,6 +88,23 @@ type Issue struct {
 	Team                              TeamInfo               `json:"team"`
 	Title                             string                 `json:"title"`
 	Type                              string                 `json:"type"`
+}
+
+type Account struct {
+	Channels                   []Channel              `json:"channels"`
+	CreatedAt                  string                 `json:"created_at"`
+	CRMSettings                CRMSettings            `json:"crm_settings"`
+	CustomFields               map[string]CustomField `json:"custom_fields"`
+	Domain                     string                 `json:"domain"`
+	Domains                    []string               `json:"domains"`
+	ExternalIDs                []ExternalID           `json:"external_ids"`
+	ID                         string                 `json:"id"`
+	LatestCustomerActivityTime string                 `json:"latest_customer_activity_time"`
+	Name                       string                 `json:"name"`
+	Owner                      Person                 `json:"owner"`
+	PrimaryDomain              string                 `json:"primary_domain"`
+	Tags                       []string               `json:"tags"`
+	Type                       string                 `json:"type"`
 }
 
 type AccountInfo struct {
@@ -134,11 +157,15 @@ type SimplifiedTeam struct {
 }
 
 type SimplifiedIssue struct {
-	ID             int    `json:"id"`
-	Account        string `json:"account"`
-	LastUpdateTime string `json:"last_update_time"`
-	Priority       string `json:"priority"`
-	VIP            bool   `json:"vip"`
+	ID             int               `json:"id"`
+	Account        SimplifiedAccount `json:"account"`
+	LastUpdateTime string            `json:"last_update_time"`
+	Priority       string            `json:"priority"`
+}
+
+type SimplifiedAccount struct {
+	Name string `json:"name"`
+	VIP  bool   `json:"vip"`
 }
 
 type Pagination struct {
@@ -150,6 +177,26 @@ type RequestConfig struct {
 	Authorization string
 	QueryParams   map[string]string
 	URL           string
+}
+
+type Channel struct {
+	ChannelID string `json:"channel_id"`
+	IsPrimary bool   `json:"is_primary"`
+	Source    string `json:"source"`
+}
+
+type CRMSettings struct {
+	Details []CRMDetail `json:"details"`
+}
+
+type CRMDetail struct {
+	ID     string `json:"id"`
+	Source string `json:"source"`
+}
+
+type ExternalID struct {
+	ExternalID string `json:"external_id"`
+	Label      string `json:"label"`
 }
 
 // AUXILIARY FUNCTIONS
@@ -190,6 +237,28 @@ func clientDoer(requestConfig RequestConfig) (int, []byte, error) {
 	}
 
 	return respStatusCode, body, nil
+}
+
+func getSimplifiedAccount(accountID string, Authorization string) (string, bool) {
+	_, body, err := clientDoer(RequestConfig{
+		URL:           PYLON_API_BASE_URL + "/accounts/" + accountID,
+		Authorization: Authorization,
+	})
+	if err != nil {
+		print("Error fetching account VIP status:", err)
+		os.Exit(1)
+	}
+
+	var response AccountAPIResponse
+	if err := json.Unmarshal([]byte(body), &response); err != nil {
+		fmt.Println("Error unmarshalling JSON:", err)
+		os.Exit(1)
+	}
+
+	Name := response.Data.Name
+	isVIP := response.Data.Tags != nil && slices.Contains(response.Data.Tags, "VIP 🌟")
+
+	return Name, isVIP
 }
 
 // HANDLER FUNCTIONS
@@ -293,17 +362,25 @@ func getIssuesWaitingOnUser(c echo.Context) error {
 	}
 
 	filters := map[string]string{"user_id": c.QueryParam("user_id"), "team_id": c.QueryParam("team_id")}
+	accounts := make(map[string]SimplifiedAccount)
 
 	issues := make([]SimplifiedIssue, 0, len(response.Data))
 	for _, issue := range response.Data {
 		if issue.Assignee.ID == filters["user_id"] && issue.Team.ID == filters["team_id"] {
 			if issue.State == "waiting_on_you" {
+				if _, exists := accounts[issue.Account.ID]; !exists {
+					name, isVIP := getSimplifiedAccount(issue.Account.ID, reqAuthorizationHeader)
+					accounts[issue.Account.ID] = SimplifiedAccount{
+						Name: name,
+						VIP:  isVIP,
+					}
+				}
+
 				issues = append(issues, SimplifiedIssue{
 					ID:             issue.Number,
-					Account:        issue.Account.ID,
+					Account:        accounts[issue.Account.ID],
 					LastUpdateTime: issue.LatestMessageTime,
 					Priority:       issue.CustomFields["priority"].Value,
-					VIP:            true,
 				})
 			}
 		}
