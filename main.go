@@ -386,6 +386,28 @@ func getIssuesWaitingOnUser(c echo.Context) error {
 		}
 	}
 
+  slices.SortFunc(issues, func(a, b SimplifiedIssue) int {
+    // sort VIP first
+    if a.Account.VIP && !b.Account.VIP {
+      return -1
+    }
+    if !a.Account.VIP && b.Account.VIP {
+      return 1
+    }
+
+    // sort priorities descending
+    priorities := []string{"low", "medium", "high", "urgent"}
+    if slices.Index(priorities, a.Priority) > slices.Index(priorities, b.Priority) {
+      return -1
+    }
+    if slices.Index(priorities, a.Priority) < slices.Index(priorities, b.Priority) {
+      return 1
+    }
+    
+    // lastly sort by last update time descending
+    return cmp.Compare(b.LastUpdateTime, a.LastUpdateTime)
+  })
+
 	return c.JSON(code, issues)
 }
 
