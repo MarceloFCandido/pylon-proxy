@@ -1,0 +1,7 @@
+[project]
+name = "Pylon Proxy"
+description = "A proxy for Pylon to be able to use it on mobile with better responsivity."
+
+[project.prompt]
+content = """
+"""
