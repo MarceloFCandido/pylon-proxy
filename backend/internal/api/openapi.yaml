@@ -1,0 +1,132 @@
+openapi: 3.0.3
+info:
+  title: Pylon Proxy API
+  version: 1.0.0
+  description: API proxy for Pylon, providing users, teams, and issues endpoints.
+servers:
+  - url: http://localhost:8080/api
+paths:
+  /health:
+    get:
+      summary: Health check
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Pong response
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Pong
+  /users:
+    get:
+      summary: List users
+      operationId: getUsers
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SimplifiedUser'
+        '401':
+          description: Unauthorized
+  /teams:
+    get:
+      summary: List teams
+      operationId: getTeams
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of teams
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SimplifiedTeam'
+        '401':
+          description: Unauthorized
+  /waiting:
+    get:
+      summary: List issues waiting on user
+      operationId: getIssuesWaitingOnUser
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: user_id
+          in: query
+          description: Filter by user ID
+          required: false
+          schema:
+            type: string
+        - name: team_id
+          in: query
+          description: Filter by team ID
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of issues waiting on user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SimplifiedIssue'
+        '401':
+          description: Unauthorized
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    SimplifiedUser:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "user_123"
+        name:
+          type: string
+          example: "Jane Doe"
+    SimplifiedTeam:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "team_456"
+        name:
+          type: string
+          example: "Support Team"
+    SimplifiedIssue:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 789
+        account:
+          $ref: '#/components/schemas/SimplifiedAccount'
+        last_update_time:
+          type: string
+          example: "2024-06-20T12:34:56Z"
+        priority:
+          type: string
+          example: "high"
+    SimplifiedAccount:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Acme Corp"
+        vip:
+          type: boolean
+          example: true

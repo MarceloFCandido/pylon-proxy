@@ -1,6 +1,7 @@
 package api
 
 import (
+	"embed"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -13,6 +14,9 @@ import (
 
 	"github.com/labstack/echo/v4"
 )
+
+//go:embed openapi.yaml swagger.html
+var apiFiles embed.FS
 
 func HealthCheck(c echo.Context) error {
 	return c.String(http.StatusOK, "Pong")
@@ -97,4 +101,23 @@ func GetIssuesWaitingOnUser(c echo.Context) error {
 	}
 
 	return c.JSON(code, issues)
+}
+
+func ServeOpenAPISpec(c echo.Context) error {
+	content, err := apiFiles.ReadFile("openapi.yaml")
+	if err != nil {
+		return c.String(http.StatusNotFound, "OpenAPI spec not found")
+	}
+
+	c.Response().Header().Set("Content-Type", "application/x-yaml")
+	return c.Blob(http.StatusOK, "application/x-yaml", content)
+}
+
+func ServeSwaggerUI(c echo.Context) error {
+	content, err := apiFiles.ReadFile("swagger.html")
+	if err != nil {
+		return c.String(http.StatusNotFound, "Swagger UI not found")
+	}
+
+	return c.HTMLBlob(http.StatusOK, content)
 }
