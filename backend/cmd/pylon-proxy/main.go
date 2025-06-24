@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"pylon-proxy/backend/internal/api"
+	"pylon-proxy/backend/internal/config"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -49,8 +50,8 @@ func main() {
 	}()
 
 	// Start server
-	log.Println("🚀 Starting server on :8080")
-	if err := e.Start(":8080"); err != nil && err != http.ErrServerClosed {
+	log.Println("🚀 Starting server on ", config.ServerPort)
+	if err := e.Start(config.ServerPort); err != nil && err != http.ErrServerClosed {
 		log.Fatalf("❌ Server start error: %v", err)
 	}
 
