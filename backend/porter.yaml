@@ -3,14 +3,25 @@ version: v2
 name: pylon-proxy-backend
 
 services:
-  - name: api
-    type: web
-    port: 8080
-    instances: 1
-    cpuCores: 0.1
-    memory: 128
+- name: api
+  run: ""
+  type: web
+  instances: 1
+  cpuCores: 0.1
+  ramMegabytes: 300
+  terminationGracePeriodSeconds: 30
+  port: 8080
+  healthCheck:
+    enabled: true
+    httpPath: /api/health
+    timeoutSeconds: 1
+    initialDelaySeconds: 15
+  private: true
+  sleep: false
+  serviceMeshEnabled: false
 
 build:
+  context: ./
   method: docker
-  context: .
   dockerfile: ./Dockerfile
+deploymentStrategy: {}
