@@ -21,7 +21,7 @@ services:
   serviceMeshEnabled: false
 
 build:
-  context: ./
+  context: ./backend
   method: docker
-  dockerfile: ./Dockerfile
+  dockerfile: ./backend/Dockerfile
 deploymentStrategy: {}
