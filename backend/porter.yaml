@@ -1,0 +1,16 @@
+version: v2
+
+name: pylon-proxy-backend
+
+services:
+  - name: api
+    type: web
+    port: 8080
+    instances: 1
+    cpuCores: 0.1
+    memory: 128
+
+build:
+  method: docker
+  context: .
+  dockerfile: ./Dockerfile
