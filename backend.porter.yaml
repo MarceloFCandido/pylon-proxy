@@ -1,27 +1,27 @@
-version: v2
+build:
+  context: ./backend
+  dockerfile: ./backend/Dockerfile
+  method: docker
+deploymentStrategy: {}
 
 name: pylon-proxy-backend
 
 services:
-- name: api
-  run: ""
-  type: web
-  instances: 1
-  cpuCores: 0.1
-  ramMegabytes: 300
-  terminationGracePeriodSeconds: 30
-  port: 8080
-  healthCheck:
-    enabled: true
-    httpPath: /api/health
-    timeoutSeconds: 1
-    initialDelaySeconds: 15
-  private: true
-  sleep: false
-  serviceMeshEnabled: false
+  - cpuCores: 0.1
+    healthCheck:
+      enabled: true
+      httpPath: /api/health
+      initialDelaySeconds: 15
+      timeoutSeconds: 1
+    instances: 1
+    name: api
+    port: 8080
+    private: true
+    ramMegabytes: 300
+    run: ""
+    serviceMeshEnabled: false
+    sleep: false
+    terminationGracePeriodSeconds: 30
+    type: web
 
-build:
-  context: ./backend
-  method: docker
-  dockerfile: ./backend/Dockerfile
-deploymentStrategy: {}
+version: v2
