@@ -17,7 +17,7 @@ services:
     name: api
     port: 8080
     private: true
-    ramMegabytes: 300
+    ramMegabytes: 128
     run: ""
     serviceMeshEnabled: false
     sleep: false
