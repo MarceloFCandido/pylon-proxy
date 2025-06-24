@@ -4,7 +4,9 @@ import (
 	"embed"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
+	"sync/atomic"
 
 	"apps/pylon-proxy/internal/client"
 	"apps/pylon-proxy/internal/config"
@@ -18,8 +20,23 @@ import (
 //go:embed openapi.yaml swagger.html
 var apiFiles embed.FS
 
+var isShuttingDown atomic.Bool
+
+func SetShuttingDown(value bool) {
+	isShuttingDown.Store(value)
+}
+
 func HealthCheck(c echo.Context) error {
-	return c.String(http.StatusOK, "Pong")
+	log.Println("🚨🚨🚨 HEALTH CHECK FUNCTION CALLED - NEW CODE IS RUNNING! 🚨🚨🚨")
+	shutdownStatus := isShuttingDown.Load()
+	log.Printf("🩺 Health check called - shutdown status: %v", shutdownStatus)
+
+	if shutdownStatus {
+		log.Println("❌ Returning 503 - Service Unavailable")
+		return c.String(http.StatusServiceUnavailable, "Shutting down")
+	}
+	log.Println("✅ Returning 200 - OK")
+	return c.String(http.StatusOK, "Pong - Updated Version!")
 }
 
 func GetUsers(c echo.Context) error {
