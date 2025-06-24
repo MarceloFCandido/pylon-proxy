@@ -27,7 +27,6 @@ func SetShuttingDown(value bool) {
 }
 
 func HealthCheck(c echo.Context) error {
-	log.Println("🚨🚨🚨 HEALTH CHECK FUNCTION CALLED - NEW CODE IS RUNNING! 🚨🚨🚨")
 	shutdownStatus := isShuttingDown.Load()
 	log.Printf("🩺 Health check called - shutdown status: %v", shutdownStatus)
 
@@ -36,7 +35,7 @@ func HealthCheck(c echo.Context) error {
 		return c.String(http.StatusServiceUnavailable, "Shutting down")
 	}
 	log.Println("✅ Returning 200 - OK")
-	return c.String(http.StatusOK, "Pong - Updated Version!")
+	return c.String(http.StatusOK, "Pong")
 }
 
 func GetUsers(c echo.Context) error {

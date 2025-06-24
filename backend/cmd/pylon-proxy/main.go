@@ -36,7 +36,7 @@ func main() {
 		api.SetShuttingDown(true)
 		log.Println("❌ Health checks now returning 503 - waiting for load balancer update...")
 		// Wait a bit before shutting down to allow health checks to update
-		time.Sleep(10 * time.Second)
+		time.Sleep(25 * time.Second)
 		log.Println("⏳ Grace period complete, shutting down server...")
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
