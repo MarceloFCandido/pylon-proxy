@@ -4,7 +4,7 @@ import (
 	"cmp"
 	"slices"
 
-	"apps/pylon-proxy/internal/models"
+	"pylon-proxy/backend/internal/models"
 )
 
 func SortIssues(issues []models.SimplifiedIssue) {

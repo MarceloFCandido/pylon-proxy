@@ -8,8 +8,8 @@ import (
 	"os"
 	"slices"
 
-	"apps/pylon-proxy/internal/config"
-	"apps/pylon-proxy/internal/models"
+	"pylon-proxy/backend/internal/config"
+	"pylon-proxy/backend/internal/models"
 )
 
 func DoRequest(requestConfig models.RequestConfig) (int, []byte, error) {

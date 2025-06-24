@@ -1,4 +1,4 @@
-module apps/pylon-proxy
+module pylon-proxy/backend
 
 go 1.24.4
 

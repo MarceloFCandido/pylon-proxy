@@ -9,7 +9,7 @@ import (
 	"syscall"
 	"time"
 
-	"apps/pylon-proxy/internal/api"
+	"pylon-proxy/backend/internal/api"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"

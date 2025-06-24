@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	"apps/pylon-proxy/internal/client"
-	"apps/pylon-proxy/internal/config"
-	"apps/pylon-proxy/internal/models"
-	"apps/pylon-proxy/pkg/utils"
+	"pylon-proxy/backend/internal/client"
+	"pylon-proxy/backend/internal/config"
+	"pylon-proxy/backend/internal/models"
+	"pylon-proxy/backend/pkg/utils"
 )
 
 func GetIssuesWaitingOnUser(userID, teamID, authorization string) ([]models.SimplifiedIssue, int, error) {

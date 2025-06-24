@@ -8,11 +8,11 @@ import (
 	"net/http"
 	"sync/atomic"
 
-	"apps/pylon-proxy/internal/client"
-	"apps/pylon-proxy/internal/config"
-	"apps/pylon-proxy/internal/models"
-	"apps/pylon-proxy/internal/service"
-	"apps/pylon-proxy/pkg/utils"
+	"pylon-proxy/backend/internal/client"
+	"pylon-proxy/backend/internal/config"
+	"pylon-proxy/backend/internal/models"
+	"pylon-proxy/backend/internal/service"
+	"pylon-proxy/backend/pkg/utils"
 
 	"github.com/labstack/echo/v4"
 )
