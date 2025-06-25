@@ -13,15 +13,8 @@ RUN go mod download
 # Copy the rest of the source code
 COPY . .
 
-# Debug: Show what files we have
-RUN echo "=== Files in build context ===" && find . -name "*.go" -type f | head -10
-RUN echo "=== Health check function ===" && grep -A 5 "func HealthCheck" internal/api/handlers.go || echo "HealthCheck function not found"
-
 # Build the binary
-RUN CGO_ENABLED=0 GOOS=linux go build -v -o bin/pylon-proxy ./cmd/pylon-proxy/main.go
-
-# Debug: Verify the binary was built
-RUN ls -la bin/ && echo "=== Binary built successfully ==="
+RUN CGO_ENABLED=0 GOOS=linux go build -v -o bin/pylon-proxy ./cmd/pylo
 
 # --- Run stage ---
 FROM alpine:3.22
