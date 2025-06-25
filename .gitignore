@@ -26,3 +26,7 @@ bin/
 go.work
 
 # End of https://www.toptal.com/developers/gitignore/api/go
+
+.parcel-cache/
+dist/
+node_modules/
