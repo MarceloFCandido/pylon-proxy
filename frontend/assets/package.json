@@ -1,0 +1,15 @@
+{
+  "dependencies": {},
+  "devDependencies": {
+    "parcel": "^2.14.0"
+  },
+  "name": "parcel-vanilla-starter",
+  "private": true,
+  "scripts": {
+    "build": "parcel build --dist-dir ../dist --no-cache",
+    "build:ci": "parcel build --no-cache",
+    "start": "parcel"
+  },
+  "source": "src/index.html",
+  "version": "0.0.0"
+}
