@@ -1,0 +1,78 @@
+/* Theme Variables - Based on Pylon's color scheme */
+:root {
+  /* Light Theme (Default) */
+  --primary-color: #5B4FE5;
+  --primary-hover: #4C40D6;
+  --primary-light: #F0EDFF;
+  --primary-dark: #3A2F94;
+
+  --background: #FFFFFF;
+  --surface: #FFFFFF;
+  --surface-hover: #F8F7FF;
+
+  --text-primary: #1A1A1A;
+  --text-secondary: #6B6B6B;
+  --text-tertiary: #9B9B9B;
+
+  --border-color: #E8E5FF;
+  --divider: #F0F0F0;
+
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+  --info: #3B82F6;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+  --nav-background: #FFFFFF;
+  --nav-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+
+  --skeleton-base: #F0F0F0;
+  --skeleton-highlight: #F8F8F8;
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  --primary-color: #7B6FF2;
+  --primary-hover: #8C7FF3;
+  --primary-light: #2A2555;
+  --primary-dark: #5B4FE5;
+
+  --background: #0F0E1C;
+  --surface: #1A1832;
+  --surface-hover: #242147;
+
+  --text-primary: #FFFFFF;
+  --text-secondary: #B8B5D6;
+  --text-tertiary: #7B78A1;
+
+  --border-color: #2A2555;
+  --divider: #2A2555;
+
+  --success: #34D399;
+  --warning: #FBBF24;
+  --error: #F87171;
+  --info: #60A5FA;
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+
+  --nav-background: #1A1832;
+  --nav-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+
+  --skeleton-base: #2A2555;
+  --skeleton-highlight: #3A3565;
+}
+
+/* Transitions for theme switching */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Disable transitions during theme switch to prevent flashing */
+.theme-transitioning * {
+  transition: none !important;
+}

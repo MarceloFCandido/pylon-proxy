@@ -1,15 +1,1 @@
-{
-  "dependencies": {},
-  "devDependencies": {
-    "parcel": "^2.14.0"
-  },
-  "name": "parcel-vanilla-starter",
-  "private": true,
-  "scripts": {
-    "build": "parcel build --dist-dir ../dist --no-cache",
-    "build:ci": "parcel build --no-cache",
-    "start": "parcel"
-  },
-  "source": "src/index.html",
-  "version": "0.0.0"
-}
+{"dependencies": {}, "devDependencies": {"parcel": "^2.14.0"}, "name": "pylon-proxy-frontend", "private": true, "scripts": {"dev": "parcel src/index.html --open", "build": "parcel build src/index.html --dist-dir ../dist --no-cache --public-url /", "build:ci": "parcel build src/index.html --no-cache --public-url /", "clean": "rm -rf .parcel-cache ../dist"}, "version": "1.0.0"}
