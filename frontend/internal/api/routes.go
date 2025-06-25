@@ -10,6 +10,7 @@ import (
 func RegisterRoutes(e *echo.Echo) {
 	log.Println("📋 Registering API routes...")
 
+	e.Static("/", "dist")
 	e.GET("/health", HealthCheck)
 	e.Any("/api/*", func(c echo.Context) error { return nil }, middleware.ProxyWithConfig(proxyConfigGenerator()))
 
