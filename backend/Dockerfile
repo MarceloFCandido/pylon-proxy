@@ -14,7 +14,7 @@ RUN go mod download
 COPY . .
 
 # Build the binary
-RUN CGO_ENABLED=0 GOOS=linux go build -v -o bin/pylon-proxy ./cmd/pylo
+RUN CGO_ENABLED=0 GOOS=linux go build -v -o bin/pylon-proxy ./cmd/pylon-proxy/main.go
 
 # --- Run stage ---
 FROM alpine:3.22
