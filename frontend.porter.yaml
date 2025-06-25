@@ -1,0 +1,27 @@
+build:
+  context: ./frontend
+  dockerfile: ./frontend/Dockerfile
+  method: docker
+deploymentStrategy: {}
+
+name: pylon-proxy-frontend
+
+services:
+  - cpuCores: 0.1
+    healthCheck:
+      enabled: true
+      httpPath: /health
+      initialDelaySeconds: 15
+      timeoutSeconds: 1
+    instances: 1
+    name: api
+    port: 8080
+    private: true
+    ramMegabytes: 128
+    run: ""
+    serviceMeshEnabled: false
+    sleep: false
+    terminationGracePeriodSeconds: 30
+    type: web
+
+version: v2
