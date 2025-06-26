@@ -1,0 +1,51 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: pylon-proxy-frontend:latest
+    ports:
+      - "8081:8081"
+    environment:
+      - PROXY_URL=http://backend:8080
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 128M
+      restart_policy:
+        condition: on-failure
+    networks:
+      - default
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: pylon-proxy-backend:latest
+    ports:
+      - "8080:8080"
+    environment: []
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '0.1'
+          memory: 128M
+      restart_policy:
+        condition: on-failure
+    networks:
+      - default
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.host_binding_ipv4: "127.0.0.1"
