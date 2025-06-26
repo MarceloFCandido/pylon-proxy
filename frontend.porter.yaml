@@ -2,7 +2,11 @@ build:
   context: ./frontend
   dockerfile: ./frontend/Dockerfile
   method: docker
+
 deploymentStrategy: {}
+
+env:
+  PROXY_URL: http://pylon-proxy-backend-api.default.svc.cluster.local:8080
 
 name: pylon-proxy-frontend
 

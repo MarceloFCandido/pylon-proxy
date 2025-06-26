@@ -2,6 +2,7 @@ build:
   context: ./backend
   dockerfile: ./backend/Dockerfile
   method: docker
+
 deploymentStrategy: {}
 
 name: pylon-proxy-backend
