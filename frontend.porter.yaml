@@ -19,7 +19,7 @@ services:
       timeoutSeconds: 1
     instances: 1
     name: api
-    port: 8080
+    port: 8081
     private: true
     ramMegabytes: 128
     run: ""
