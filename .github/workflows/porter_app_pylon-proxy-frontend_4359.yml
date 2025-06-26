@@ -18,6 +18,7 @@ jobs:
               timeout-minutes: 30
               run: exec porter apply -f ./frontend.porter.yaml
               env:
+                DOCKER_BUILDKIT: '1'
                 PORTER_APP_NAME: pylon-proxy-frontend
                 PORTER_CLUSTER: "4359"
                 PORTER_DEPLOYMENT_TARGET_ID: ce4ad44b-b230-4232-82b8-4f15d31320b2
