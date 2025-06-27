@@ -142,6 +142,7 @@ type SimplifiedIssue struct {
 	Account        SimplifiedAccount `json:"account"`
 	LastUpdateTime string            `json:"last_update_time"`
 	Priority       string            `json:"priority"`
+	Title          string            `json:"title"`
 }
 
 type SimplifiedAccount struct {

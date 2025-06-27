@@ -49,6 +49,7 @@ func GetIssuesWaitingOnUser(userID, teamID, authorization string) ([]models.Simp
 					Account:        accounts[issue.Account.ID],
 					LastUpdateTime: issue.LatestMessageTime,
 					Priority:       issue.CustomFields["priority"].Value,
+					Title:          issue.Title,
 				})
 			}
 		}
