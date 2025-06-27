@@ -236,6 +236,9 @@
   font-family: monospace;
 }
 
+.issue-title {
+  margin-bottom: 0.5rem;
+}
 .issue-footer {
   display: flex;
   justify-content: space-between;

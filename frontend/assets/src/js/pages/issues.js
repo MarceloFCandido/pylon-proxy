@@ -128,7 +128,7 @@ export default class IssuesPage {
 
   // Check if both selections are made and load issues
   async checkAndLoadIssues() {
-    if (this.selectedUserId && this.selectedTeamId) {
+    if (this.selectedUserId || this.selectedTeamId) {
       await this.loadIssues();
     } else {
       // Show empty state if not both selected
@@ -202,6 +202,9 @@ export default class IssuesPage {
             ${issue.account.vip ? '<span class="vip-badge">VIP</span>' : ''}
           </div>
           <span class="issue-id">#${issue.id}</span>
+        </div>
+        <div class="issue-title">
+        ${issue.title}
         </div>
         <div class="issue-footer">
           <span class="issue-priority priority-${issue.priority.toLowerCase()}">

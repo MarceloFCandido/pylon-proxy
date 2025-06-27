@@ -34,7 +34,9 @@ func GetIssuesWaitingOnUser(userID, teamID, authorization string) ([]models.Simp
 	issues := make([]models.SimplifiedIssue, 0, len(response.Data))
 
 	for _, issue := range response.Data {
-		if issue.Assignee.ID == userID && issue.Team.ID == teamID {
+		if (userID == "" || issue.Assignee.ID == userID) &&
+			(issue.Team.ID == teamID || teamID == "") {
+		// if (issue.Assignee.ID == userID && issue.Team.ID == teamID) {
 			if issue.State == "waiting_on_you" {
 				if _, exists := accounts[issue.Account.ID]; !exists {
 					name, isVIP := client.GetAccount(issue.Account.ID, authorization)
