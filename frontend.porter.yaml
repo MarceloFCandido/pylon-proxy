@@ -20,7 +20,7 @@ services:
     instances: 1
     name: api
     port: 8081
-    private: true
+    private: false
     ramMegabytes: 128
     run: ""
     serviceMeshEnabled: false
