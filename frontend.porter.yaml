@@ -12,6 +12,8 @@ name: pylon-proxy-frontend
 
 services:
   - cpuCores: 0.1
+    domains:
+      - name: $$DOMAIN_NAME
     healthCheck:
       enabled: true
       httpPath: /health

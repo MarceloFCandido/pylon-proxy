@@ -12,6 +12,11 @@ jobs:
             - name: Set Github tag
               id: vars
               run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+            - name: Porter Replace Action
+              uses: porter-dev/replace-action@v0.1.0
+              with:
+                key_values: $$DOMAIN_NAME=${{ secrets.DOMAIN_FOR_PRODUCTION_DEPLOYMENT }}
+                file_path: ./frontend.porter.yaml
             - name: Setup porter
               uses: porter-dev/setup-porter@v0.1.0
             - name: Deploy stack
