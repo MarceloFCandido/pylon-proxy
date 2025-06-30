@@ -51,7 +51,7 @@ export default class IssuesPage {
             <div class="empty-state">
               <div class="empty-state-icon">📋</div>
               <p class="text-secondary">
-                Select both a user and team to view issues
+                Select a user and/or a team to view issues
               </p>
             </div>
           </div>
@@ -131,7 +131,7 @@ export default class IssuesPage {
     if (this.selectedUserId || this.selectedTeamId) {
       await this.loadIssues();
     } else {
-      // Show empty state if not both selected
+      // Show empty state if not any selected
       this.renderEmptyState();
     }
   }
@@ -225,7 +225,7 @@ export default class IssuesPage {
       <div class="empty-state">
         <div class="empty-state-icon">📋</div>
         <p class="text-secondary">
-          Select both a user and team to view issues
+          Select both a user and/or a team to view issues
         </p>
       </div>
     `;
