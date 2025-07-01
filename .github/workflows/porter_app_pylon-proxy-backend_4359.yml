@@ -10,7 +10,7 @@ jobs:
       - name: Setup porter
         uses: porter-dev/setup-porter@v0.1.0
       - env:
-          DOCKER_BUILDKIT: '1'
+          DOCKER_BUILDKIT: "1"
           PORTER_APP_NAME: pylon-proxy-backend
           PORTER_CLUSTER: "4359"
           PORTER_DEPLOYMENT_TARGET_ID: ce4ad44b-b230-4232-82b8-4f15d31320b2
@@ -21,10 +21,13 @@ jobs:
           PORTER_TAG: ${{ steps.vars.outputs.sha_short }}
           PORTER_TOKEN: ${{ secrets.PORTER_APP_13871_4359 }}
         name: Deploy stack
-        run: exec porter apply -f ./backend.porter.yaml
+        run: exec porter apply -f ./backend/backend.porter.yaml
         timeout-minutes: 30
 name: Deploy to pylon-proxy-backend
 "on":
+  paths:
+    - "backend/**"
+    - "frontend/**"
   push:
     branches:
       - master
