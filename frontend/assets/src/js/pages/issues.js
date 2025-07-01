@@ -62,7 +62,16 @@ export default class IssuesPage {
 
   // Initialize data and event listeners
   async setupEventListeners() {
+    // Get last selection from storage
+    this.selectedUserId = this.storage.getUser();
+    this.selectedTeamId = this.storage.getTeam();
+
     await this.loadInitialData();
+
+    // Trigger issue loading if there are saved selections
+    if (this.selectedUserId || this.selectedTeamId) {
+      this.checkAndLoadIssues();
+    }
   }
 
   // Load users and teams
@@ -93,7 +102,9 @@ export default class IssuesPage {
       <select id="user-select" class="form-select">
         <option value="">Select a user</option>
         ${this.users.map(user => `
-          <option value="${user.id}">${user.name}</option>
+          <option value="${user.id}" ${this.selectedUserId === user.id ? 'selected' : ''}>
+            ${user.name}
+          </option>
         `).join('')}
       </select>
     `;
@@ -102,6 +113,7 @@ export default class IssuesPage {
     const select = document.getElementById('user-select');
     select.addEventListener('change', (e) => {
       this.selectedUserId = e.target.value;
+      this.storage.saveUser(this.selectedUserId);
       this.checkAndLoadIssues();
     });
   }
@@ -113,7 +125,9 @@ export default class IssuesPage {
       <select id="team-select" class="form-select">
         <option value="">Select a team</option>
         ${this.teams.map(team => `
-          <option value="${team.id}">${team.name}</option>
+          <option value="${team.id}" ${this.selectedTeamId === team.id ? 'selected' : ''}>
+            ${team.name}
+          </option>
         `).join('')}
       </select>
     `;
@@ -122,6 +136,7 @@ export default class IssuesPage {
     const select = document.getElementById('team-select');
     select.addEventListener('change', (e) => {
       this.selectedTeamId = e.target.value;
+      this.storage.saveTeam(this.selectedTeamId);
       this.checkAndLoadIssues();
     });
   }

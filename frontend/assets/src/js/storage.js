@@ -2,6 +2,8 @@
 export class Storage {
   constructor() {
     this.API_KEY = 'pylon_api_key';
+    this.TEAM_KEY = 'pylon_team';
+    this.USER_KEY = 'pylon_user';
   }
 
   // Clear API key from localStorage
@@ -15,11 +17,11 @@ export class Storage {
   }
 
   getTeam() {
-    return localStorage.getItem('pylon_team');
+    return localStorage.getItem(this.TEAM_KEY);
   }
 
   getUser() {
-    return localStorage.getItem('pylon_user');
+    return localStorage.getItem(this.USER_KEY);
   }
 
   // Check if API key exists
@@ -38,7 +40,7 @@ export class Storage {
 
   saveTeam(team) {
     if (team) {
-      localStorage.setItem('pylon_team', team);
+      localStorage.setItem(this.TEAM_KEY, team);
       return true;
     }
     return false;
@@ -46,7 +48,7 @@ export class Storage {
 
   saveUser(user) {
     if (user) {
-      localStorage.setItem('pylon_user', user);
+      localStorage.setItem(this.USER_KEY, user);
       return true;
     }
     return false;
