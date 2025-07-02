@@ -36,3 +36,4 @@ name: Deploy to pylon-proxy-frontend
     paths:
       - "frontend/**"
       - "backend/**"
+  workflow_dispatch: {}
