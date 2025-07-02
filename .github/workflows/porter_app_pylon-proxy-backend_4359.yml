@@ -25,9 +25,9 @@ jobs:
         timeout-minutes: 30
 name: Deploy to pylon-proxy-backend
 "on":
-  paths:
-    - "backend/**"
-    - "frontend/**"
   push:
     branches:
       - master
+    paths:
+      - "backend/**"
+      - "frontend/**"
