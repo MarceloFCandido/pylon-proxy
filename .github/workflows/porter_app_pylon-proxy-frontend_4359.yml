@@ -10,7 +10,7 @@ jobs:
       - name: Porter Replace Action
         uses: porter-dev/replace-action@v0.1.0
         with:
-          file_path: ./frontend.porter.yaml
+          file_path: ./frontend/frontend.porter.yaml
           key_values: $$DOMAIN_NAME=${{ secrets.DOMAIN_FOR_PRODUCTION_DEPLOYMENT }}
       - name: Setup porter
         uses: porter-dev/setup-porter@v0.1.0
