@@ -146,10 +146,9 @@ export default class HomePage implements PageComponent {
           console.log('Attempting navigation to /issues');
 
           // Try multiple navigation methods
-          const appRouter = (window as any).appRouter;
-          if (appRouter && typeof appRouter.navigate === 'function') {
+          if (window.appRouter && typeof window.appRouter.navigate === 'function') {
             console.log('Using app router');
-            appRouter.navigate('/issues');
+            window.appRouter.navigate('/issues');
           } else {
             console.log('App router not available, trying direct click');
             // Try clicking the issues link as absolute fallback
@@ -184,9 +183,8 @@ export default class HomePage implements PageComponent {
     // Navigate back to home to refresh the UI after a short delay
     setTimeout(() => {
       // Use the global router for client-side navigation
-      const appRouter = (window as any).appRouter;
-      if (appRouter) {
-        appRouter.navigate('/');
+      if (window.appRouter) {
+        window.appRouter.navigate('/');
       }
     }, 1000);
   }
@@ -200,15 +198,6 @@ export default class HomePage implements PageComponent {
         </div>
       `;
     }
-  }
-}
-
-// Extend Window interface for global router
-declare global {
-  interface Window {
-    appRouter?: {
-      navigate(path: string): void;
-    };
   }
 }
 

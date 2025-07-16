@@ -1,5 +1,5 @@
 // API client for backend communication with TypeScript
-import { User, Team, Issue, ApiError } from '@/types';
+import { User, Team, Issue } from '@/types';
 import { Storage } from './storage';
 
 interface RequestOptions extends RequestInit {

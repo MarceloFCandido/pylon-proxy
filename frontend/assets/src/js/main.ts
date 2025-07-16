@@ -10,13 +10,6 @@ import '../styles/main.css';
 import '../styles/themes.css';
 import '../styles/components.css';
 
-// Extend Window interface for global router
-declare global {
-  interface Window {
-    appRouter: Router | null;
-  }
-}
-
 // Make router globally accessible
 window.appRouter = null;
 
