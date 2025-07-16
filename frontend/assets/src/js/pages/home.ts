@@ -1,13 +1,18 @@
-// Home page component for API key management
-import { ApiClient } from '../api.js';
+// Home page component for API key management with TypeScript
+import { ApiClient } from '../api';
+import { Storage } from '../storage';
+import { PageComponent } from '@/types';
 
-export default class HomePage {
-  constructor(storage) {
+export default class HomePage implements PageComponent {
+  private storage: Storage;
+  private apiClient: ApiClient;
+
+  constructor(storage: Storage) {
     this.storage = storage;
     this.apiClient = new ApiClient(storage);
   }
 
-  render() {
+  render(): string {
     const existingKey = this.storage.getApiKey();
 
     return `
@@ -61,14 +66,18 @@ export default class HomePage {
   }
 
   // Initialize event listeners after render
-  setupEventListeners() {
-    const form = document.getElementById('api-key-form');
-    const clearBtn = document.getElementById('clear-btn');
-    const apiKeyInput = document.getElementById('api-key-input');
-    const messageContainer = document.getElementById('message-container');
+  setupEventListeners(): void {
+    const form = document.getElementById('api-key-form') as HTMLFormElement | null;
+    const clearBtn = document.getElementById('clear-btn') as HTMLButtonElement | null;
+    const apiKeyInput = document.getElementById('api-key-input') as HTMLInputElement | null;
+
+    if (!form || !apiKeyInput) {
+      console.error('Required form elements not found');
+      return;
+    }
 
     // Handle form submission
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async (e: Event) => {
       e.preventDefault();
       await this.handleSubmit(e);
     });
@@ -93,16 +102,21 @@ export default class HomePage {
     });
   }
 
-  async handleSubmit(e) {
+  private async handleSubmit(e: Event): Promise<void> {
     // Make sure we have the event
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
 
-    const apiKeyInput = document.getElementById('api-key-input');
-    const submitBtn = document.getElementById('submit-btn');
-    const messageContainer = document.getElementById('message-container');
+    const apiKeyInput = document.getElementById('api-key-input') as HTMLInputElement | null;
+    const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+    const messageContainer = document.getElementById('message-container') as HTMLDivElement | null;
+
+    if (!apiKeyInput || !submitBtn || !messageContainer) {
+      console.error('Required form elements not found');
+      return;
+    }
 
     const apiKey = apiKeyInput.value.trim();
 
@@ -132,13 +146,14 @@ export default class HomePage {
           console.log('Attempting navigation to /issues');
 
           // Try multiple navigation methods
-          if (window.appRouter && typeof window.appRouter.navigate === 'function') {
+          const appRouter = (window as any).appRouter;
+          if (appRouter && typeof appRouter.navigate === 'function') {
             console.log('Using app router');
-            window.appRouter.navigate('/issues');
+            appRouter.navigate('/issues');
           } else {
             console.log('App router not available, trying direct click');
             // Try clicking the issues link as absolute fallback
-            const issuesLink = document.querySelector('a[href="/issues"]');
+            const issuesLink = document.querySelector<HTMLAnchorElement>('a[href="/issues"]');
             if (issuesLink) {
               console.log('Found issues link, clicking it');
               issuesLink.click();
@@ -161,9 +176,7 @@ export default class HomePage {
     }
   }
 
-  handleClear() {
-    const messageContainer = document.getElementById('message-container');
-
+  private handleClear(): void {
     // Clear the API key
     this.storage.clearApiKey();
     this.showMessage('API key cleared successfully!', 'success');
@@ -171,31 +184,43 @@ export default class HomePage {
     // Navigate back to home to refresh the UI after a short delay
     setTimeout(() => {
       // Use the global router for client-side navigation
-      if (window.appRouter) {
-        window.appRouter.navigate('/');
+      const appRouter = (window as any).appRouter;
+      if (appRouter) {
+        appRouter.navigate('/');
       }
     }, 1000);
   }
 
-  showMessage(message, type) {
+  private showMessage(message: string, type: 'success' | 'error' | 'warning'): void {
     const messageContainer = document.getElementById('message-container');
-    messageContainer.innerHTML = `
-      <div class="alert alert-${type}">
-        ${message}
-      </div>
-    `;
+    if (messageContainer) {
+      messageContainer.innerHTML = `
+        <div class="alert alert-${type}">
+          ${message}
+        </div>
+      `;
+    }
+  }
+}
+
+// Extend Window interface for global router
+declare global {
+  interface Window {
+    appRouter?: {
+      navigate(path: string): void;
+    };
   }
 }
 
 // Auto-initialize event listeners when route changes
-window.addEventListener('routechange', (e) => {
+window.addEventListener('routechange', ((e: CustomEvent<{ path: string }>) => {
   if (e.detail.path === '/') {
     // Wait for DOM to be ready
     setTimeout(async () => {
-      const { Storage } = await import('../storage.js');
+      const { Storage } = await import('../storage');
       const storage = new Storage();
       const homePage = new HomePage(storage);
       homePage.setupEventListeners();
     }, 100);
   }
-});
+}) as EventListener);

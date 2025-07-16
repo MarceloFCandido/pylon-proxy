@@ -1,15 +1,33 @@
 {
+  "name": "pylon-proxy-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Frontend for Pylon Proxy application",
+  "scripts": {
+    "dev": "webpack serve --mode development",
+    "build": "webpack --mode production",
+    "build:ci": "webpack --mode production",
+    "clean": "rm -rf dist node_modules",
+    "type-check": "tsc --noEmit",
+    "lint": "tsc --noEmit && eslint 'src/**/*.{ts,tsx}'"
+  },
   "dependencies": {},
   "devDependencies": {
-    "parcel": "^2.14.0"
-  },
-  "name": "pylon-proxy-frontend",
-  "private": true,
-  "scripts": {
-    "dev": "parcel src/index.html --open",
-    "build": "parcel build src/index.html --dist-dir ../dist --no-cache --public-url /",
-    "build:ci": "parcel build src/index.html --no-cache --public-url /",
-    "clean": "rm -rf .parcel-cache ../dist"
-  },
-  "version": "1.0.0"
+    "typescript": "^5.3.3",
+    "@types/node": "^20.10.6",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1",
+    "ts-loader": "^9.5.1",
+    "html-webpack-plugin": "^5.6.0",
+    "terser-webpack-plugin": "^5.3.10",
+    "css-loader": "^6.8.1",
+    "style-loader": "^3.3.3",
+    "mini-css-extract-plugin": "^2.7.7",
+    "css-minimizer-webpack-plugin": "^5.0.1",
+    "postcss": "^8.4.33",
+    "postcss-loader": "^7.3.4",
+    "autoprefixer": "^10.4.16",
+    "cssnano": "^6.0.3"
+  }
 }
