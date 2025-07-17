@@ -51,7 +51,7 @@ jobs:
       - name: Porter Replace Action
         uses: porter-dev/replace-action@v0.1.0
         with:
-          file_path: ./frontend/frontend.porter.yaml
+          file_path: ./frontend/frontend.preview.porter.yaml
           key_values: "$$DOMAIN_NAME=${{ env.PREVIEW_ENV_FRONTEND_DOMAIN }},$$PROXY_INTERNAL=http://pylon-proxy-backend-api.${{ steps.remove_non_alphanumeric.outputs.formatted_branch_name }}.svc.cluster.local:8080"
       - env:
           DOCKER_BUILDKIT: '1'
