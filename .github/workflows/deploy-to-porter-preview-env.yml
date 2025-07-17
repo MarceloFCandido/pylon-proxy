@@ -27,7 +27,7 @@ jobs:
           PORTER_TAG: ${{ steps.vars.outputs.sha_short }}
           PORTER_TOKEN: ${{ secrets.PORTER_APP_13871_4359 }}
         name: Build and deploy preview environment for the backend
-        run: exec porter apply -f ./backend/porter.yaml --preview
+        run: exec porter apply -f ./backend/backend.preview.porter.yaml --preview
         timeout-minutes: 30
       - env:
           CLOUDFLARE_API_EMAIL: ${{ secrets.CLOUDFLARE_API_EMAIL }}
@@ -64,7 +64,7 @@ jobs:
           PORTER_TAG: ${{ steps.vars.outputs.sha_short }}
           PORTER_TOKEN: ${{ secrets.PORTER_APP_13871_4359 }}
         name: Build and deploy preview environment for the frontend
-        run: exec porter apply -f ./frontend.porter.yaml --preview
+        run: exec porter apply -f ./frontend/frontend.preview.porter.yaml --preview
         timeout-minutes: 30
 
 name: Deploy to Preview Environment
