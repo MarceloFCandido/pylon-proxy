@@ -45,7 +45,7 @@ jobs:
       - name: Turn PR branch name non-alphanumeric characters into hyphens
         id: remove_non_alphanumeric
         run: |
-          output=$(echo "${{ github.ref_name }}" | sed -e 's/[^[:alnum:]]/-/g' -e 's/^-*//g' -e 's/-*$//g' | tr '[:upper:]' '[:lower:]')
+          output=$(echo "${{ github.event.pull_request.head.ref }}" | sed -e 's/[^[:alnum:]]/-/g' -e 's/^-*//g' -e 's/-*$//g' | tr '[:upper:]' '[:lower:]')
           echo $output
           echo "formatted_branch_name=$output" >> $GITHUB_OUTPUT
       - name: Porter Replace Action
