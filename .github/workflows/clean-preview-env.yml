@@ -5,16 +5,6 @@ jobs:
   clean-preview-env:
     runs-on: ubuntu-latest
     steps:
-      - name: Setup porter
-        uses: porter-dev/setup-porter@v0.1.0
-      - env:
-          PORTER_CLUSTER: "4359"
-          PORTER_HOST: https://dashboard.porter.run
-          PORTER_PROJECT: "13871"
-          PORTER_TOKEN: ${{ secrets.PORTER_APP_13871_4359 }}
-        name: Delete preview environment
-        run: porter target delete --name ${{ github.event.pull_request.head.ref }} --force
-        timeout-minutes: 30
       - env:
           CLOUDFLARE_API_EMAIL: ${{ secrets.CLOUDFLARE_API_EMAIL }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -25,6 +15,16 @@ jobs:
           delete: true
           record: ${{ env.PREVIEW_ENV_FRONTEND_DOMAIN }}
           zone_name: ${{ secrets.CLOUDFLARE_ZONE_NAME }}
+      - name: Setup porter
+        uses: porter-dev/setup-porter@v0.1.0
+      - env:
+          PORTER_CLUSTER: "4359"
+          PORTER_HOST: https://dashboard.porter.run
+          PORTER_PROJECT: "13871"
+          PORTER_TOKEN: ${{ secrets.PORTER_APP_13871_4359 }}
+        name: Delete preview environment
+        run: porter target delete --name ${{ github.event.pull_request.head.ref }} --force
+        timeout-minutes: 30
 
 name: Clean Preview Environment resources
 
