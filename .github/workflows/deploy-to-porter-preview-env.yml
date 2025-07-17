@@ -17,6 +17,7 @@ jobs:
       - name: Setup porter
         uses: porter-dev/setup-porter@v0.1.0
       - env:
+          DOCKER_BUILDKIT: '1'
           PORTER_APP_NAME: pylon-proxy-backend
           PORTER_CLUSTER: "4359"
           PORTER_HOST: https://dashboard.porter.run
@@ -53,6 +54,7 @@ jobs:
           file_path: ./frontend/frontend.porter.yaml
           key_values: "$$DOMAIN_NAME=${{ env.PREVIEW_ENV_FRONTEND_DOMAIN }},$$PROXY_INTERNAL=http://pylon-proxy-backend-api.${{ steps.remove_non_alphanumeric.outputs.formatted_branch_name }}.svc.cluster.local:8080"
       - env:
+          DOCKER_BUILDKIT: '1'
           PORTER_APP_NAME: pylon-proxy-frontend
           PORTER_CLUSTER: "4359"
           PORTER_HOST: https://dashboard.porter.run
