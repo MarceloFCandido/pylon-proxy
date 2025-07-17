@@ -24,7 +24,7 @@ jobs:
           PORTER_REPO_NAME: ${{ github.event.repository.name }}
           PORTER_TAG: ${{ steps.vars.outputs.sha_short }}
           PORTER_TOKEN: ${{ secrets.PORTER_APP_13871_4359 }}
-        name: Deploy stack
+        name: Deploy backend
         run: exec porter apply -f ./backend/backend.porter.yaml
         timeout-minutes: 30
       - name: Porter Replace Action
@@ -43,7 +43,7 @@ jobs:
           PORTER_REPO_NAME: ${{ github.event.repository.name }}
           PORTER_TAG: ${{ steps.vars.outputs.sha_short }}
           PORTER_TOKEN: ${{ secrets.PORTER_APP_13871_4359 }}
-        name: Deploy stack
+        name: Deploy frontend
         run: exec porter apply -f ./frontend/frontend.porter.yaml
         timeout-minutes: 30
 
