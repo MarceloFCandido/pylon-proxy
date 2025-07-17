@@ -39,7 +39,7 @@ jobs:
           record: ${{ env.PREVIEW_ENV_FRONTEND_DOMAIN }}
           target: ${{ secrets.CLUSTER_INGRESS_DOMAIN }}
           ttl: 3600
-          type: CNAME
+          type: A
           zone_name: ${{ secrets.CLOUDFLARE_ZONE_NAME }}
       - name: Turn PR branch name non-alphanumeric characters into hyphens
         id: remove_non_alphanumeric
