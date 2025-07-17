@@ -55,3 +55,22 @@ Dockerfile*
 # Git
 .git/
 .gitignore
+
+# Node modules and package manager files
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# TypeScript build artifacts
+dist/
+*.tsbuildinfo
+
+# Webpack/Parcel cache
+.cache/
+.parcel-cache/
+.webpack/
+
+# Source maps (optional, uncomment if you don't want to include them)
+# *.map

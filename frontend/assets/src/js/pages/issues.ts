@@ -1,8 +1,28 @@
-// Issues page component for viewing issues waiting on users
-import { ApiClient } from '../api.js';
+// Issues page component for viewing issues waiting on users with TypeScript
+import { ApiClient } from '../api';
+import { Storage } from '../storage';
+import { PageComponent, User, Team, Issue } from '@/types';
 
-export default class IssuesPage {
-  constructor(storage) {
+interface IssueWithDetails extends Issue {
+  account: {
+    id: string;
+    name: string;
+    vip?: boolean;
+  };
+  priority: 'low' | 'medium' | 'high' | 'critical';
+  last_update_time: string;
+}
+
+export default class IssuesPage implements PageComponent {
+  private storage: Storage;
+  private apiClient: ApiClient;
+  private selectedUserId: string | null;
+  private selectedTeamId: string | null;
+  private users: User[];
+  private teams: Team[];
+  private issues: IssueWithDetails[];
+
+  constructor(storage: Storage) {
     this.storage = storage;
     this.apiClient = new ApiClient(storage);
     this.selectedUserId = null;
@@ -12,7 +32,7 @@ export default class IssuesPage {
     this.issues = [];
   }
 
-  render() {
+  render(): string {
     return `
       <div class="container fade-in">
         <!-- Page Header -->
@@ -61,7 +81,7 @@ export default class IssuesPage {
   }
 
   // Initialize data and event listeners
-  async setupEventListeners() {
+  async setupEventListeners(): Promise<void> {
     // Get last selection from storage
     this.selectedUserId = this.storage.getUser();
     this.selectedTeamId = this.storage.getTeam();
@@ -75,7 +95,7 @@ export default class IssuesPage {
   }
 
   // Load users and teams
-  async loadInitialData() {
+  private async loadInitialData(): Promise<void> {
     try {
       // Load users and teams in parallel
       const [users, teams] = await Promise.all([
@@ -91,13 +111,15 @@ export default class IssuesPage {
       this.renderTeamSelect();
     } catch (error) {
       console.error('Failed to load initial data:', error);
-      this.handleApiError(error);
+      this.handleApiError(error as Error);
     }
   }
 
   // Render user select dropdown
-  renderUserSelect() {
+  private renderUserSelect(): void {
     const container = document.getElementById('user-select-container');
+    if (!container) return;
+
     container.innerHTML = `
       <select id="user-select" class="form-select">
         <option value="">Select a user</option>
@@ -110,17 +132,24 @@ export default class IssuesPage {
     `;
 
     // Add event listener
-    const select = document.getElementById('user-select');
-    select.addEventListener('change', (e) => {
-      this.selectedUserId = e.target.value;
-      this.storage.saveUser(this.selectedUserId);
-      this.checkAndLoadIssues();
-    });
+    const select = document.getElementById('user-select') as HTMLSelectElement | null;
+    if (select) {
+      select.addEventListener('change', (e: Event) => {
+        const target = e.target as HTMLSelectElement;
+        this.selectedUserId = target.value || null;
+        if (this.selectedUserId) {
+          this.storage.saveUser(this.selectedUserId);
+        }
+        this.checkAndLoadIssues();
+      });
+    }
   }
 
   // Render team select dropdown
-  renderTeamSelect() {
+  private renderTeamSelect(): void {
     const container = document.getElementById('team-select-container');
+    if (!container) return;
+
     container.innerHTML = `
       <select id="team-select" class="form-select">
         <option value="">Select a team</option>
@@ -133,16 +162,21 @@ export default class IssuesPage {
     `;
 
     // Add event listener
-    const select = document.getElementById('team-select');
-    select.addEventListener('change', (e) => {
-      this.selectedTeamId = e.target.value;
-      this.storage.saveTeam(this.selectedTeamId);
-      this.checkAndLoadIssues();
-    });
+    const select = document.getElementById('team-select') as HTMLSelectElement | null;
+    if (select) {
+      select.addEventListener('change', (e: Event) => {
+        const target = e.target as HTMLSelectElement;
+        this.selectedTeamId = target.value || null;
+        if (this.selectedTeamId) {
+          this.storage.saveTeam(this.selectedTeamId);
+        }
+        this.checkAndLoadIssues();
+      });
+    }
   }
 
   // Check if both selections are made and load issues
-  async checkAndLoadIssues() {
+  private async checkAndLoadIssues(): Promise<void> {
     if (this.selectedUserId || this.selectedTeamId) {
       await this.loadIssues();
     } else {
@@ -152,19 +186,20 @@ export default class IssuesPage {
   }
 
   // Load issues for selected user and team
-  async loadIssues() {
+  private async loadIssues(): Promise<void> {
     const container = document.getElementById('issues-container');
+    if (!container) return;
 
     // Show loading state
     container.innerHTML = this.renderLoadingSkeletons();
 
     try {
       const issues = await this.apiClient.getIssuesWaitingOnUser(
-        this.selectedUserId,
-        this.selectedTeamId
+        this.selectedUserId || undefined,
+        this.selectedTeamId || undefined
       );
 
-      this.issues = issues;
+      this.issues = issues as IssueWithDetails[];
       this.renderIssues();
     } catch (error) {
       console.error('Failed to load issues:', error);
@@ -177,7 +212,7 @@ export default class IssuesPage {
   }
 
   // Render loading skeletons
-  renderLoadingSkeletons() {
+  private renderLoadingSkeletons(): string {
     return Array(3).fill(0).map(() => `
       <div class="skeleton-card">
         <div class="flex justify-between mb-3">
@@ -193,8 +228,9 @@ export default class IssuesPage {
   }
 
   // Render issues list
-  renderIssues() {
+  private renderIssues(): void {
     const container = document.getElementById('issues-container');
+    if (!container) return;
 
     if (this.issues.length === 0) {
       container.innerHTML = `
@@ -234,23 +270,25 @@ export default class IssuesPage {
   }
 
   // Render empty state
-  renderEmptyState() {
+  private renderEmptyState(): void {
     const container = document.getElementById('issues-container');
-    container.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-state-icon">📋</div>
-        <p class="text-secondary">
-          Select both a user and/or a team to view issues
-        </p>
-      </div>
-    `;
+    if (container) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">📋</div>
+          <p class="text-secondary">
+            Select both a user and/or a team to view issues
+          </p>
+        </div>
+      `;
+    }
   }
 
   // Format relative time
-  formatRelativeTime(dateString) {
+  private formatRelativeTime(dateString: string): string {
     const date = new Date(dateString);
     const now = new Date();
-    const diffMs = now - date;
+    const diffMs = now.getTime() - date.getTime();
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
@@ -264,7 +302,7 @@ export default class IssuesPage {
   }
 
   // Handle API errors
-  handleApiError(error) {
+  private handleApiError(error: Error): void {
     if (error.message === 'Invalid API key') {
       // Redirect to home page to re-enter API key
       window.location.href = '/';
@@ -279,21 +317,21 @@ export default class IssuesPage {
         </div>
       `;
 
-      userContainer.innerHTML = errorHtml;
-      teamContainer.innerHTML = errorHtml;
+      if (userContainer) userContainer.innerHTML = errorHtml;
+      if (teamContainer) teamContainer.innerHTML = errorHtml;
     }
   }
 }
 
 // Auto-initialize event listeners when route changes
-window.addEventListener('routechange', (e) => {
+window.addEventListener('routechange', ((e: CustomEvent<{ path: string }>) => {
   if (e.detail.path === '/issues') {
     // Wait for DOM to be ready
     setTimeout(async () => {
-      const { Storage } = await import('../storage.js');
+      const { Storage } = await import('../storage');
       const storage = new Storage();
       const issuesPage = new IssuesPage(storage);
       await issuesPage.setupEventListeners();
     }, 100);
   }
-});
+}) as EventListener);
