@@ -1,26 +1,36 @@
-// API client for backend communication
+// API client for backend communication with TypeScript
+import { User, Team, Issue } from '@/types';
+import { Storage } from './storage';
+
+interface RequestOptions extends RequestInit {
+  headers?: HeadersInit;
+}
+
 export class ApiClient {
-  constructor(storage) {
+  private storage: Storage;
+  private baseUrl: string;
+
+  constructor(storage: Storage) {
     this.storage = storage;
     this.baseUrl = '/api'; // Relative path, will be proxied by frontend server
   }
 
   // Make authenticated request
-  async request(endpoint, options = {}) {
+  private async request<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
     const apiKey = this.storage.getApiKey();
 
     if (!apiKey) {
       throw new Error('No API key found');
     }
 
-    const defaultOptions = {
+    const defaultOptions: RequestOptions = {
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
     };
 
-    const mergedOptions = {
+    const mergedOptions: RequestOptions = {
       ...defaultOptions,
       ...options,
       headers: {
@@ -39,7 +49,7 @@ export class ApiClient {
         throw new Error(`Request failed: ${response.statusText}`);
       }
 
-      return await response.json();
+      return await response.json() as T;
     } catch (error) {
       console.error('API request error:', error);
       throw error;
@@ -47,7 +57,7 @@ export class ApiClient {
   }
 
   // Test API key validity
-  async testApiKey(apiKey) {
+  async testApiKey(apiKey: string): Promise<boolean> {
     try {
       const response = await fetch(`${this.baseUrl}/users`, {
         headers: {
@@ -63,17 +73,17 @@ export class ApiClient {
   }
 
   // Get users
-  async getUsers() {
-    return this.request('/users');
+  async getUsers(): Promise<User[]> {
+    return this.request<User[]>('/users');
   }
 
   // Get teams
-  async getTeams() {
-    return this.request('/teams');
+  async getTeams(): Promise<Team[]> {
+    return this.request<Team[]>('/teams');
   }
 
   // Get issues waiting on user
-  async getIssuesWaitingOnUser(userId, teamId) {
+  async getIssuesWaitingOnUser(userId?: string, teamId?: string): Promise<Issue[]> {
     const params = new URLSearchParams();
     if (userId) params.append('user_id', userId);
     if (teamId) params.append('team_id', teamId);
@@ -81,6 +91,6 @@ export class ApiClient {
     const queryString = params.toString();
     const endpoint = `/waiting${queryString ? `?${queryString}` : ''}`;
 
-    return this.request(endpoint);
+    return this.request<Issue[]>(endpoint);
   }
 }

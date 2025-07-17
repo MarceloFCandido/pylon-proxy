@@ -1,36 +1,34 @@
-// Storage utility for managing API key and other data
+// Storage utility for managing API key and other data with type safety
 export class Storage {
-  constructor() {
-    this.API_KEY = 'pylon_api_key';
-    this.TEAM_KEY = 'pylon_team';
-    this.USER_KEY = 'pylon_user';
-  }
+  private readonly API_KEY: string = 'pylon_api_key';
+  private readonly TEAM_KEY: string = 'pylon_team';
+  private readonly USER_KEY: string = 'pylon_user';
 
   // Clear API key from localStorage
-  clearApiKey() {
+  clearApiKey(): void {
     localStorage.removeItem(this.API_KEY);
   }
 
   // Get API key from localStorage
-  getApiKey() {
+  getApiKey(): string | null {
     return localStorage.getItem(this.API_KEY);
   }
 
-  getTeam() {
+  getTeam(): string | null {
     return localStorage.getItem(this.TEAM_KEY);
   }
 
-  getUser() {
+  getUser(): string | null {
     return localStorage.getItem(this.USER_KEY);
   }
 
   // Check if API key exists
-  hasApiKey() {
+  hasApiKey(): boolean {
     return !!this.getApiKey();
   }
 
   // Save API key to localStorage
-  saveApiKey(key) {
+  saveApiKey(key: string): boolean {
     if (key && key.trim()) {
       localStorage.setItem(this.API_KEY, key.trim());
       return true;
@@ -38,7 +36,7 @@ export class Storage {
     return false;
   }
 
-  saveTeam(team) {
+  saveTeam(team: string): boolean {
     if (team) {
       localStorage.setItem(this.TEAM_KEY, team);
       return true;
@@ -46,7 +44,7 @@ export class Storage {
     return false;
   }
 
-  saveUser(user) {
+  saveUser(user: string): boolean {
     if (user) {
       localStorage.setItem(this.USER_KEY, user);
       return true;
