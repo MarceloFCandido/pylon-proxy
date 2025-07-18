@@ -122,6 +122,24 @@
   box-shadow: var(--shadow-md);
 }
 
+/* Animated border for refresh button with pending changes */
+.btn-pending {
+  box-shadow: 0 0 0 0 rgba(124, 113, 254, 0.7);
+  animation: pulse-ring 1.5s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(124, 113, 254, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(124, 113, 254, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(124, 113, 254, 0);
+  }
+}
+
 .btn-secondary {
   background-color: var(--surface-hover);
   color: var(--text-primary);

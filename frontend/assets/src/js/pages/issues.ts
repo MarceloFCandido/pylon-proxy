@@ -21,6 +21,7 @@ export default class IssuesPage implements PageComponent {
   private users: User[];
   private teams: Team[];
   private issues: IssueWithDetails[];
+  private hasPendingChanges: boolean;
 
   constructor(storage: Storage) {
     this.storage = storage;
@@ -30,6 +31,7 @@ export default class IssuesPage implements PageComponent {
     this.users = [];
     this.teams = [];
     this.issues = [];
+    this.hasPendingChanges = false;
   }
 
   render(): string {
@@ -61,6 +63,17 @@ export default class IssuesPage implements PageComponent {
                 <div class="skeleton skeleton-select"></div>
               </div>
             </div>
+
+            <!-- Refresh Button (Mobile-optimized) -->
+            <div class="refresh-controls mt-2 flex justify-center">
+              <button 
+                id="refresh-issues-btn" 
+                class="btn btn-primary w-full sm:w-auto" 
+                aria-label="Refresh issues list"
+                disabled>
+                <span>Refresh Issues</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -87,6 +100,19 @@ export default class IssuesPage implements PageComponent {
     this.selectedTeamId = this.storage.getTeam();
 
     await this.loadInitialData();
+
+    // Set up refresh button click handler
+    const refreshBtn = document.getElementById('refresh-issues-btn') as HTMLButtonElement | null;
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', () => {
+        this.hasPendingChanges = false;
+        this.updateRefreshButtonState();
+        this.checkAndLoadIssues();
+      });
+    }
+
+    // Update button state based on loaded selections
+    this.updateRefreshButtonState();
 
     // Trigger issue loading if there are saved selections
     if (this.selectedUserId || this.selectedTeamId) {
@@ -140,7 +166,8 @@ export default class IssuesPage implements PageComponent {
         if (this.selectedUserId) {
           this.storage.saveUser(this.selectedUserId);
         }
-        this.checkAndLoadIssues();
+        this.hasPendingChanges = true;
+        this.updateRefreshButtonState();
       });
     }
   }
@@ -170,8 +197,25 @@ export default class IssuesPage implements PageComponent {
         if (this.selectedTeamId) {
           this.storage.saveTeam(this.selectedTeamId);
         }
-        this.checkAndLoadIssues();
+        this.hasPendingChanges = true;
+        this.updateRefreshButtonState();
       });
+    }
+  }
+
+  // Update the refresh button state based on selections
+  private updateRefreshButtonState(): void {
+    const btn = document.getElementById('refresh-issues-btn') as HTMLButtonElement | null;
+    if (btn) {
+      const hasSelection = !!(this.selectedUserId || this.selectedTeamId);
+      btn.disabled = !hasSelection;
+      
+      // Add pending changes animation if enabled and has changes
+      if (hasSelection && this.hasPendingChanges) {
+        btn.classList.add('btn-pending');
+      } else {
+        btn.classList.remove('btn-pending');
+      }
     }
   }
 
