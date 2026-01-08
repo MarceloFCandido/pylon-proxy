@@ -4,7 +4,7 @@ concurrency:
 
 jobs:
   porter-deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -16,6 +16,8 @@ jobs:
       - env:
           DOCKER_BUILDKIT: "1"
           PORTER_APP_NAME: pylon-proxy-backend
+          PORTER_BUILDKIT_ARGS: --platform linux/arm64
+          PORTER_BUILDKIT_PUSH_ARGS: --platform linux/arm64
           PORTER_CLUSTER: "5365"
           PORTER_DEPLOYMENT_TARGET_ID: 8345dd30-482a-4891-abbf-6a578f17265d
           PORTER_HOST: https://dashboard.porter.run
@@ -35,6 +37,8 @@ jobs:
       - env:
           DOCKER_BUILDKIT: "1"
           PORTER_APP_NAME: pylon-proxy-frontend
+          PORTER_BUILDKIT_ARGS: --platform linux/arm64
+          PORTER_BUILDKIT_PUSH_ARGS: --platform linux/arm64
           PORTER_CLUSTER: "5365"
           PORTER_DEPLOYMENT_TARGET_ID: 8345dd30-482a-4891-abbf-6a578f17265d
           PORTER_HOST: https://dashboard.porter.run
