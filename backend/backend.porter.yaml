@@ -14,7 +14,7 @@ services:
       httpPath: /api/health
       initialDelaySeconds: 15
       timeoutSeconds: 1
-    instances: 1
+    instances: 3
     name: api
     port: 8080
     private: true
