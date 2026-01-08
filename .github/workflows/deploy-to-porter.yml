@@ -50,7 +50,7 @@ jobs:
           PORTER_TAG: ${{ steps.vars.outputs.sha_short }}
           PORTER_TOKEN: ${{ secrets.PORTER_APP_13871_5365 }}
         name: Deploy ${{ matrix.service.name }}
-        run: exec porter apply -f ${{ matrix.service.porter_file }}
+        run: exec porter apply -f ${{ matrix.service.porter_file }} --wait
         timeout-minutes: 30
 
 name: Deploy to Pylon Proxy
