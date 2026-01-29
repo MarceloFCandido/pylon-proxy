@@ -67,7 +67,7 @@ func GetAccount(accountID string, authorization string) (string, bool) {
 	}
 
 	name := response.Data.Name
-	isVIP := response.Data.Tags != nil && slices.Contains(response.Data.Tags, "VIP 🌟")
+	isVIP := response.Data.Tags != nil && slices.Contains(response.Data.Tags, "VIP")
 
 	return name, isVIP
 }
