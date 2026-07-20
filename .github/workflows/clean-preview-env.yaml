@@ -18,10 +18,10 @@ jobs:
       - name: Setup porter
         uses: porter-dev/setup-porter@v0.1.0
       - env:
-          PORTER_CLUSTER: "5365"
+          PORTER_CLUSTER: "5703"
           PORTER_HOST: https://dashboard.porter.run
           PORTER_PROJECT: "13871"
-          PORTER_TOKEN: ${{ secrets.PORTER_APP_13871_5365 }}
+          PORTER_TOKEN: ${{ secrets.PORTER_APP_13871_5703 }}
         name: Delete preview environment
         run: porter target delete --name ${{ github.event.pull_request.head.ref }} --force
         timeout-minutes: 30

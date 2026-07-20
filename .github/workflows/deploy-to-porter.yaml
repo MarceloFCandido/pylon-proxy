@@ -41,14 +41,14 @@ jobs:
           PORTER_APP_NAME: ${{ matrix.service.app_name }}
           PORTER_BUILDKIT_ARGS: --platform linux/arm64
           PORTER_BUILDKIT_PUSH_ARGS: --platform linux/arm64
-          PORTER_CLUSTER: "5365"
-          PORTER_DEPLOYMENT_TARGET_ID: 8345dd30-482a-4891-abbf-6a578f17265d
+          PORTER_CLUSTER: "5703"
+          PORTER_DEPLOYMENT_TARGET_ID: 3f56c1b2-9eb1-4245-ad2e-54b6cccc0394 
           PORTER_HOST: https://dashboard.porter.run
           PORTER_PR_NUMBER: ${{ github.event.number }}
           PORTER_PROJECT: "13871"
           PORTER_REPO_NAME: ${{ github.event.repository.name }}
           PORTER_TAG: ${{ steps.vars.outputs.sha_short }}
-          PORTER_TOKEN: ${{ secrets.PORTER_APP_13871_5365 }}
+          PORTER_TOKEN: ${{ secrets.PORTER_APP_13871_5703 }}
         name: Deploy ${{ matrix.service.name }}
         run: exec porter apply -f ${{ matrix.service.porter_file }} --wait
         timeout-minutes: 30
@@ -60,7 +60,7 @@ on:
     branches:
       - master
     paths:
-      - ".github/workflows/deploy-to-porter.yml"
+      - ".github/workflows/deploy-to-porter.yaml"
       - "backend/**"
       - "frontend/**"
   workflow_dispatch: {}
