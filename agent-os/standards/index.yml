@@ -1,0 +1,29 @@
+# Agent OS Standards Index
+
+backend:
+  account-enrichment:
+    description: Request-scoped account cache pattern in issue lists
+  authorization:
+    description: Auth header pass-through flow and rules
+  client-error-handling:
+    description: Avoid os.Exit(1); new client functions must return errors
+  error-responses:
+    description: Plain text error format and status code propagation
+  issue-sort-order:
+    description: VIP → priority → recency sort order and future plans
+  proxy-then-simplify:
+    description: Full-to-simplified model transformation pattern
+  routing:
+    description: /api/ prefix convention and route registration
+  service-handler-split:
+    description: When to extract to service/ vs keep in handler
+
+frontend:
+  app-router-global:
+    description: window.appRouter usage and null-check requirement
+  navigation:
+    description: data-route attribute pattern for SPA links
+  page-lifecycle:
+    description: Two-phase render/setupEventListeners pattern
+  selection-persistence:
+    description: localStorage-backed selection via Storage class
